@@ -26,10 +26,15 @@ public class tehtava1 {
             if (userBirthdate.isBefore(currentDate) 
             && userBirthdate.getMonth() == currentDate.getMonth() 
             && userBirthdate.getDayOfMonth() == currentDate.getDayOfMonth()) {
-            System.out.println("Happy birthday!");
-    }
+                System.out.println("Happy birthday!");
+            }
 
-            System.out.println("You are " + ageInDays + " days old.");
+            if (userBirthdate.isAfter(currentDate)) {
+                System.out.println("Hey, you are not born yet.");
+            } else {
+                System.out.println("You are " + ageInDays + " days old.");
+            }
+
 
             if(ageInDays % 1000 == 0){
                 System.out.println("That's a nice round number!");
