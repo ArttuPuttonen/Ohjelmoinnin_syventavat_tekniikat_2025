@@ -1,11 +1,12 @@
 package viikko4;
 
+import java.util.Comparator;
 import java.util.Objects;
 
 /**
  * The category of an event, with primary and secondary categories.
  */
-public class Category {
+public class Category implements Comparable<Category> {
     private String primary;
     private String secondary;
 
@@ -18,6 +19,32 @@ public class Category {
     public Category(String primary, String secondary) {
         this.primary = primary;
         this.secondary = secondary;
+    }
+
+    /**
+     * Parse a category string in the format "primary"
+     * or "primary/secondary" and make a category of them.
+     * Folds the category parts to lower case.
+     * Throws java.lang.IllegalArgumentException if the
+     * string is of the wrong format.
+     * 
+     * @param categoryString the string to parse
+     * @return new category
+     */
+    public static Category parse(String categoryString) {
+        if (categoryString == null || 
+            categoryString.isEmpty() ||
+            categoryString.isBlank()) {
+            throw new IllegalArgumentException("invalid category string");
+        }
+
+        String[] categoryParts = categoryString.split("/");
+        String primary = categoryParts[0].toLowerCase();
+        String secondary = null;
+        if (categoryParts.length == 2) {
+            secondary = categoryParts[1].toLowerCase();
+        }
+        return new Category(primary, secondary);
     }
 
     /**
@@ -45,7 +72,13 @@ public class Category {
      */
     @Override
     public String toString() {
-        return String.format("%s/%s", this.primary, this.secondary);
+        StringBuilder sb = new StringBuilder();
+        sb.append(this.primary);
+        if (this.secondary != null) {
+            sb.append("/");
+            sb.append(this.secondary);
+        }
+        return sb.toString();
     }
 
     /**
@@ -80,5 +113,21 @@ public class Category {
     @Override
     public int hashCode() {
         return Objects.hash(this.primary, this.secondary);
-    }    
+    }
+
+    @Override
+    public int compareTo(Category other) {
+        int result = Objects.compare(
+            this.primary, 
+            other.getPrimary(),
+            Comparator.naturalOrder());
+        if (result != 0) {
+            return result;
+        }
+
+        return Objects.compare(
+            this.secondary,
+            other.getSecondary(),
+            Comparator.naturalOrder());
+    }
 }

@@ -45,7 +45,7 @@ public class Today {
 
             // 2. Process the second parameter: a category in the form "primary/secondary" or just "primary"
             String categoryParam = args[1];
-            Category criteriaCategory = parseCategory(categoryParam);
+            Category criteriaCategory = Category.parse(categoryParam);
 
             // Create an instance of Today and load events from storage
             Today app = new Today();
@@ -75,16 +75,6 @@ public class Today {
         } catch (Exception e) {
             System.err.println("Error processing parameters: " + e.getMessage());
             System.exit(1);
-        }
-    }
-
-     // Helper method to parse a category string into a Category object.
-    private static Category parseCategory(String categoryStr) {
-        if (categoryStr.contains("/")) {
-            String[] parts = categoryStr.split("/", 2);
-            return new Category(parts[0], parts[1]);
-        } else {
-            return new Category(categoryStr, "");
         }
     }
 
@@ -166,8 +156,8 @@ public class Today {
             "2000-05-08,J2SE 1.3 released,oracle/java",
             "1998-12-04,J2SE 1.2 released,oracle/java",
             "1997-02-18,JDK 1.1 released,oracle/java",
-            "1996-01-23,JDK 1.0 released,oracle/java");
-
+            "1996-01-23,JDK 1.0 released,oracle/java"
+        );
         for (String row : javaEventRows) {
             this.events.add(makeEvent(row));
         }
@@ -190,18 +180,18 @@ public class Today {
             "2023-06-01,Rust 1.70.0 released,programming/rust",
             "2023-04-20,Rust 1.69.0 released,programming/rust",
             "2023-03-09,Rust 1.68.0 released,programming/rust",
-            "2023-01-26,Rust 1.67.0 released,programming/rust");
+            "2023-01-26,Rust 1.67.0 released,programming/rust"
+        );
         for (String row : rustEventRows) {
             this.events.add(makeEvent(row));
         }
 
         // Add one test event with today's date,
-        // so that we can always get at least one match in the report. 
-        // This is copied from the example in the assignment.
+        // so that we can always get at least one match in the report.
         this.events.add(
             makeEvent(
-                LocalDate.now(), 
-                "Test " + LocalDate.now().toString(), 
+                LocalDate.now(),
+                "Test " + LocalDate.now().toString(),
                 new Category("test", "test")));
     }
 
@@ -210,7 +200,7 @@ public class Today {
         return makeEvent(
             LocalDate.parse(dateString),
             description,
-            parseCategory(categoryString));
+            Category.parse(categoryString));
     }
 
     private Event makeEvent(LocalDate date, String description, Category category) {
