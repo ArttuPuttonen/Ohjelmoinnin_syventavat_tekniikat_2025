@@ -9,8 +9,8 @@ public class Today {
     public static void main(String[] args) {
         // Check if the user provided month and day as command-line arguments
         if (args.length != 2) {
-            System.err.println("Usage: java Today <month> <day>");
-            System.err.println("Example: java Today 2 10");
+            System.err.println("Usage: mvn exec:java -Dexec.mainClass=\"Today\" -Dexec.args=\"<month> <day>\"");
+            System.err.println("Example: mvn exec:java -Dexec.mainClass=\"Today\" -Dexec.args=\"2 10\"");
             return;
         }
 
@@ -30,7 +30,7 @@ public class Today {
             // Define the date to be used from the provided month and day
             final MonthDay monthDay = MonthDay.of(month, day);
 
-            // Let's find out the home directory of the user using the getHomeDirectory method
+            // Let's find out the home directory of the user using the getHomeDirectory method. Method defined below.
             String homeDirectory = getHomeDirectory();
 
             // Define the path to the events file
@@ -45,7 +45,6 @@ public class Today {
 
             // Create a new CSVEventProvider
             EventProvider provider = new CSVEventProvider(eventsFilePath.toString());
-
 
 
             // Get the events of the date
