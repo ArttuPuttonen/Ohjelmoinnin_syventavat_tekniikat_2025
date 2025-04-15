@@ -30,6 +30,8 @@ public class Today {
         String configDirectory = ".today";
         Path csvPath = Paths.get(homeDirectory, configDirectory, "events.csv");
         Path sqlitePath = Paths.get(homeDirectory, configDirectory, "events.sqlite3");
+
+        System.out.println("===FOR DEBUGGING PURPOSES===");
         
         // Create the CSV events file if it doesn't exist.
         if (!Files.exists(csvPath)) {
@@ -66,8 +68,11 @@ public class Today {
         } catch (Exception e) {
             System.err.println("Error creating WebEventProvider: " + e.getMessage());
         }
+
+        System.out.println("===FOR DEBUGGING PURPOSES===");
     }
 
+    
     public static void main(String[] args) {
         int exitCode = new CommandLine(new Today()).execute(args);
         System.exit(exitCode);
