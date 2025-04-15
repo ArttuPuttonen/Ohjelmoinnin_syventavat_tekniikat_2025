@@ -1,7 +1,7 @@
 # Today - Command Line Event Application
 
 This project is an extended version of the "Today" application that displays events related to a specific day (typically today) from various sources such as CSV files, an SQLite database, and a web service. 
-It also supports adding new events via command-line arguments. The project is built using Java (recommended version 21 or Java 17) and managed with Maven.
+It also supports adding new events via command-line arguments. The project is built using Java (recommended version 21) and managed with Maven.
 It uses the picocli library for command-line parsing, the sqlite-jdbc driver for database connectivity, Jackson for JSON deserialization, and other techniques covered in the course Ohjelmoinnin Syventävät Tekniikat.
 
 ## Contents
@@ -18,7 +18,7 @@ It uses the picocli library for command-line parsing, the sqlite-jdbc driver for
 
 ## Requirements and Setup
 
-- **JDK:** Recommended JDK 21 (or at least Java 17). Ensure your `JAVA_HOME` is set properly.
+- **JDK:** Recommended JDK 21 (if other version is used, the properties in pom.xml should be changed according to the desired version). Ensure your `JAVA_HOME` is set properly.
 - **Maven:** Maven 3.6 or newer.
 - **SQLite:** SQLite (and the SQLite Command Line Shell) is used to initialize the database.
 - **Additional Tools:** You may use a text editor or IDE (e.g., VS Code, IntelliJ IDEA) to edit the code.
@@ -54,9 +54,25 @@ listproviders – Lists the identifiers of the registered event providers.
 Note: For options, both short and long forms are supported. For instance, in listevents you can use -d/--date and -c/--category.
 
 
+## Populating the events.csv CSV File with Fake Data (Optional)
+
+If you want to populate the CSV event file with demo data, you can copy the `fake10k.csv` file (located in the `src/main/resources` folder) to your `.today` directory and rename it to `events.csv`. For example:
+
+cp src/main/resources/fake10k.csv ~/.today/events.csv
+
+Alternatively, you can run your own script or use a text editor to append the contents of fake10k.csv to your CSV file. 
+
+Note that by default, if the CSV file does not exist, the application creates an empty file. Automatic population of this file is not performed by the application to prevent overwriting any user modifications.
+
+
+
 ## Database Initialization
 
-Before running the application with the SQLite provider, initialize the database using the provided SQL scripts.
+The SQLite database file `events.sqlite3` is provided as a resource in the project (located in `src/main/resources/events.sqlite3`).
+When the application starts, it checks if the database file exists in the `.today` directory in your home folder (e.g., `~/.today/events.sqlite3`). 
+If the file is not found, the application automatically copies it from the resources to that location.
+
+If you prefer to initialize or update the database manually, you can follow these steps:
 
 1. Create a directory (if not already present) for your database files (e.g., in your home directory, create a .today folder):
 
@@ -79,6 +95,10 @@ CREATE TABLE temp_event (event_date DATE, event_description TEXT, category_id IN
 INSERT INTO event(event_date, event_description, category_id) SELECT * FROM temp_event;
 DROP TABLE temp_event;
 
+Note:
+By default, the application automatically populates the database if the events.sqlite3 file is not present in the .today directory. 
+The manual instructions above are provided for advanced users who wish to customize the database initialization or update its contents.
+
 ## Project Structure
 
 - src/main/java: Contains all Java source code
@@ -92,7 +112,7 @@ DROP TABLE temp_event;
 
 ## Tools and Libraries
 
-- **JDK 21** (or Java 17)
+- **JDK 21**
 - **Maven** for build and dependency management.
 - **picocli** for command line interface handling.
 - **sqlite-jdbc** for SQLite database connectivity.

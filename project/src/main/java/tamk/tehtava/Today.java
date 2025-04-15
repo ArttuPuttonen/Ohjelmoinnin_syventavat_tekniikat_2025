@@ -5,27 +5,27 @@ import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.MonthDay;
 
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import tamk.tehtava.commands.AddEventCommand;
 import tamk.tehtava.commands.ListEvents;
 import tamk.tehtava.commands.ListProviders;
-import tamk.tehtava.commands.ListRuleEvents;
 import tamk.tehtava.providers.CSVEventProvider;
 import tamk.tehtava.providers.SQLiteEventProvider;
 import tamk.tehtava.providers.web.WebEventProvider;
-
+import tamk.tehtava.util.DatabaseInitializer;  // Import the DatabaseInitializer helper
 
 @Command(name = "today", 
-         subcommands = { ListProviders.class, ListEvents.class, AddEventCommand.class, ListRuleEvents.class },
+         subcommands = { ListProviders.class, ListEvents.class, AddEventCommand.class },
          description = "Shows events from history and annual observations")
 public class Today {
     public Today() {
-        // Gets the singleton manager. Subsequent calls to getInstance will return the same reference.
+        // Get the singleton manager. Subsequent calls to getInstance will return the same instance.
         EventManager manager = EventManager.getInstance();
 
-        // Construct paths to local event storage files in a ".today" subdirectory of the user's home directory.
+        // Construct paths to local event storage files in the ".today" subdirectory in the user's home directory.
         String homeDirectory = System.getProperty("user.home");
         String configDirectory = ".today";
         Path csvPath = Paths.get(homeDirectory, configDirectory, "events.csv");
@@ -41,15 +41,17 @@ public class Today {
             }
         }
         
-        // Note: The SQLite database file will be created automatically on first connection if it doesn't exist.
+        // Check if the SQLite database file exists.
+        // If it does not, the helper method will copy it from resources (or create a new one).
         if (!Files.exists(sqlitePath)) {
             System.out.println("SQLite database file does not exist; it will be created automatically.");
+            DatabaseInitializer.ensureDatabaseExists();
         }
         
         // Add a CSV event provider that reads from the CSV file.
         String csvProviderId = "standard";
         manager.addEventProvider(new CSVEventProvider(csvPath.toString(), csvProviderId));
-        // Try to add the same CSV provider again to ensure duplicates are not added.
+        // Try to add the same CSV provider again to avoid duplicate registration.
         if (!manager.addEventProvider(new CSVEventProvider(csvPath.toString(), csvProviderId))) {
             System.err.printf("Event provider '%s' is already registered%n", csvProviderId);
         }
@@ -64,9 +66,7 @@ public class Today {
         } catch (Exception e) {
             System.err.println("Error creating WebEventProvider: " + e.getMessage());
         }
-        
-
-}
+    }
 
     public static void main(String[] args) {
         int exitCode = new CommandLine(new Today()).execute(args);
