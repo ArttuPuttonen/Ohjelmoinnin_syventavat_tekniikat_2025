@@ -29,6 +29,17 @@ Navigate to the project root (where the `pom.xml` is located) and run:
 
 mvn clean compile
 
+///////////////////////
+
+If desired to build and executable JAR file, run the following Maven command:
+
+mvn clean package
+
+This creates JAR file in the target folder that contains all the compiled classes
+
+Configuration of the needed Maven Shade Plugin is already included in pom.xml
+
+
 
 ## Running the Application
 
@@ -36,6 +47,15 @@ You can run the application using Maven's exec plugin. For example,
 to run the application you can use the following command:
 
 mvn exec:java -Dexec.mainClass="tamk.tehtava.Today" -Dexec.args="listevents"
+
+/////////////////////////////////////////////////////////////////
+If the application is build using mvn clean package (JAR), the same basic "listevents" version of the program can be run with:
+
+java -jar target/Today-1.0-SNAPSHOT-shaded.jar listevents
+
+Note: The jar example is assuming that the .jar file name has not been changed from the default
+
+
 
 
 ## Command Line Options and Subcommands
