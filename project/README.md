@@ -174,3 +174,8 @@ mvn exec:java -Dexec.mainClass="tamk.tehtava.Today" -Dexec.args="addevent --date
 
 mvn exec:java -Dexec.mainClass="tamk.tehtava.Today" -Dexec.args="listproviders"
 
+
+One more example using JAR (basically the same):
+
+java -jar target/Today-1.0-SNAPSHOT-shaded.jar listevents -d 03-24 -c apple/macos
+
